@@ -55,6 +55,35 @@ function createAddQuoteForm() {
     document.body.appendChild(form);
 }
 
+// Function to update categories in the dropdown
+function populateCategories() {
+    const categoryFilter = document.getElementById('categoryFilter');
+    categoryFilter.innerHTML = '<option value="all">All Categories</option>';
+
+    // Get unique categories
+    const uniqueCategories = [...new Set(quotes.map(quote => quote.category))];
+    uniqueCategories.forEach(category => {
+        const option = document.createElement('option');
+        option.value = category;
+        option.textContent = category;
+        categoryFilter.appendChild(option);
+    });
+}
+// Function to filter quotes based on selected category
+function filterQuotes() {
+    const selectedCategory = document.getElementById('categoryFilter').value;
+    const quoteDisplay = document.getElementById('quoteDisplay');
+    quoteDisplay.innerHTML = '';
+
+    const filteredQuotes = selectedCategory === 'all' ? quotes : quotes.filter(quote => quote.category === selectedCategory);
+    filteredQuotes.forEach(quote => {
+        const p = document.createElement('p');
+        p.textContent = quote.text;
+        quoteDisplay.appendChild(p);
+    });
+
+    localStorage.setItem('selectedCategory', selectedCategory);
+}
 
   
   // Event listener for showing a new quote
