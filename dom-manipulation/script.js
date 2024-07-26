@@ -152,3 +152,34 @@ function filterQuotes() {
 
     localStorage.setItem('selectedCategory', selectedCategory);
 }
+
+// Sync with server
+function syncWithServer(newQuote) {
+    fetch(API_URL, {
+        method: 'POST',
+        body: JSON.stringify(newQuote),
+        headers: {
+            'Content-type': 'application/json; charset=UTF-8',
+        },
+    })
+    .then(response => response.json())
+    .then(json => console.log('Synced with server:', json))
+    .catch(error => console.error('Error syncing with server:', error));
+}
+// Periodic fetch from server to update quotes
+function fetchFromServer() {
+    fetch(API_URL)
+    .then(response => response.json())
+    .then(serverQuotes => {
+        // Assuming serverQuotes is an array of quotes
+        serverQuotes.forEach(serverQuote => {
+            const existingQuote = quotes.find(q => q.text === serverQuote.text);
+            if (!existingQuote) {
+                quotes.push(serverQuote);
+            }
+        });
+        saveQuotes();
+        filterQuotes();
+    })
+    .catch(error => console.error('Error fetching from server:', error));
+}
