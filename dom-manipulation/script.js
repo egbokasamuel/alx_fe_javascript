@@ -21,7 +21,7 @@ function saveQuotes() {
 }
 
 // Function to handle adding a new quote
-function addQuote() {
+async function addQuote() {
     const quoteText = document.getElementById('newQuoteText').value;
     const quoteCategory = document.getElementById('newQuoteCategory').value;
 
@@ -30,7 +30,7 @@ function addQuote() {
         quotes.push(newQuote);
         categories.add(quoteCategory);
         saveQuotes(); // Save to local storage
-        syncWithServer(newQuote); // Sync with server
+        await syncWithServer(newQuote); // Sync with server
         alert('Quote added successfully!');
         populateCategories();
         filterQuotes();
@@ -97,24 +97,27 @@ function importFromJsonFile(event) {
 }
 
 // Sync with server
-function syncWithServer(newQuote) {
-    fetch(API_URL, {
-        method: 'POST',
-        body: JSON.stringify(newQuote),
-        headers: {
-            'Content-type': 'application/json; charset=UTF-8',
-        },
-    })
-    .then(response => response.json())
-    .then(json => console.log('Synced with server:', json))
-    .catch(error => console.error('Error syncing with server:', error));
+async function syncWithServer(newQuote) {
+    try {
+        const response = await fetch(API_URL, {
+            method: 'POST',
+            body: JSON.stringify(newQuote),
+            headers: {
+                'Content-type': 'application/json; charset=UTF-8',
+            },
+        });
+        const data = await response.json();
+        console.log('Synced with server:', data);
+    } catch (error) {
+        console.error('Error syncing with server:', error);
+    }
 }
 
 // Fetch quotes from server and update local storage
-function fetchQuotesFromServer() {
-    fetch(API_URL)
-    .then(response => response.json())
-    .then(serverQuotes => {
+async function fetchQuotesFromServer() {
+    try {
+        const response = await fetch(API_URL);
+        const serverQuotes = await response.json();
         // Assuming serverQuotes is an array of quotes
         serverQuotes.forEach(serverQuote => {
             const existingQuote = quotes.find(q => q.text === serverQuote.text);
@@ -124,8 +127,9 @@ function fetchQuotesFromServer() {
         });
         saveQuotes();
         filterQuotes();
-    })
-    .catch(error => console.error('Error fetching from server:', error));
+    } catch (error) {
+        console.error('Error fetching from server:', error);
+    }
 }
 
 // Load quotes on initialization
