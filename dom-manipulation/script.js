@@ -166,6 +166,21 @@ function syncWithServer(newQuote) {
     .then(json => console.log('Synced with server:', json))
     .catch(error => console.error('Error syncing with server:', error));
 }
+
+// Sync with server
+function syncWithServer(newQuote) {
+    fetch(API_URL, {
+        method: 'POST',
+        body: JSON.stringify(newQuote),
+        headers: {
+            'Content-type': 'application/json; charset=UTF-8',
+        },
+    })
+    .then(response => response.json())
+    .then(json => console.log('Synced with server:', json))
+    .catch(error => console.error('Error syncing with server:', error));
+}
+
 // Periodic fetch from server to update quotes
 function fetchFromServer() {
     fetch(API_URL)
@@ -183,3 +198,15 @@ function fetchFromServer() {
     })
     .catch(error => console.error('Error fetching from server:', error));
 }
+
+// Load quotes on initialization
+window.onload = function() {
+    loadQuotes();
+    const selectedCategory = localStorage.getItem('selectedCategory');
+    if (selectedCategory) {
+        document.getElementById('categoryFilter').value = selectedCategory;
+        filterQuotes();
+    }
+    // Fetch from server every 10 seconds
+    setInterval(fetchFromServer, 10000);
+};
