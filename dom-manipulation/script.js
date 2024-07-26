@@ -91,6 +91,19 @@ function importFromJsonFile(event) {
 // Load quotes on initialization
 loadQuotes();
 
+// Load quotes from local storage if available
+function loadQuotes() {
+    const storedQuotes = localStorage.getItem('quotes');
+    if (storedQuotes) {
+        quotes = JSON.parse(storedQuotes);
+    }
+}
+
+// Save quotes to local storage
+function saveQuotes() {
+    localStorage.setItem('quotes', JSON.stringify(quotes));
+}
+
 // Add event listeners
 document.getElementById('addQuoteButton').addEventListener('click', addQuote);
 document.getElementById('exportQuotes').addEventListener('click', exportToJsonFile);
