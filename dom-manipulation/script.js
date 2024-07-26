@@ -108,3 +108,18 @@ function saveQuotes() {
 document.getElementById('addQuoteButton').addEventListener('click', addQuote);
 document.getElementById('exportQuotes').addEventListener('click', exportToJsonFile);
 document.getElementById('importFile').addEventListener('change', importFromJsonFile);
+// Function to filter quotes based on selected category
+function filterQuotes() {
+    const selectedCategory = document.getElementById('categoryFilter').value;
+    const quoteDisplay = document.getElementById('quoteDisplay');
+    quoteDisplay.innerHTML = '';
+
+    const filteredQuotes = selectedCategory === 'all' ? quotes : quotes.filter(quote => quote.category === selectedCategory);
+    filteredQuotes.forEach(quote => {
+        const p = document.createElement('p');
+        p.textContent = quote.text;
+        quoteDisplay.appendChild(p);
+    });
+
+    localStorage.setItem('selectedCategory', selectedCategory);
+}
