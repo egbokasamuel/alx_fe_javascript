@@ -132,6 +132,14 @@ async function fetchQuotesFromServer() {
     }
 }
 
+// Sync quotes between local storage and server
+async function syncQuotes() {
+    await fetchQuotesFromServer();
+    quotes.forEach(async (quote) => {
+        await syncWithServer(quote);
+    });
+}
+
 // Load quotes on initialization
 window.onload = function() {
     loadQuotes();
@@ -141,7 +149,7 @@ window.onload = function() {
         filterQuotes();
     }
     // Fetch from server every 10 seconds
-    setInterval(fetchQuotesFromServer, 10000);
+    setInterval(syncQuotes, 10000);
 };
 
 // Add event listeners
