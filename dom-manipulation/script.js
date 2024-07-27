@@ -1,5 +1,3 @@
-// script.js
-
 let quotes = [];
 let categories = new Set();
 const API_URL = 'https://jsonplaceholder.typicode.com/posts'; // Use JSONPlaceholder for testing
@@ -135,9 +133,10 @@ async function fetchQuotesFromServer() {
 // Sync quotes between local storage and server
 async function syncQuotes() {
     await fetchQuotesFromServer();
-    quotes.forEach(async (quote) => {
+    for (const quote of quotes) {
         await syncWithServer(quote);
-    });
+    }
+    alert("Quotes synced with server!"); // Displaying a notification to user
 }
 
 // Load quotes on initialization
